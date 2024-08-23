@@ -1,5 +1,5 @@
-const mangoose = require("mangoose");
-const userSchema = new mangoose.Schema(
+const mongoose = require("mongoose");
+const userSchema = new mongoose.Schema(
   {
     username: {type:String, unique: true},
     email: String,
@@ -10,4 +10,5 @@ const userSchema = new mangoose.Schema(
   }
 );
 
-export const UserModel = mangoose.model("User", userSchema);
+const UserModel = mongoose.model("User", userSchema);
+module.exports = UserModel;
