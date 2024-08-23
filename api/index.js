@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
 
 dotenv.config();
 mongoose.connect(process.env.MONGO_URL)
@@ -18,8 +19,23 @@ app.use(
   })
 );
 
+app.use(cookieParser());
+
 app.get("/test", (req, res) => {
   res.json("Hello World!");
+});
+
+app.get('/profile', (req, res) => {
+  const token = req.cookies?.token;
+  if (token) {
+    jwt.verify(token, process.env.JWT_SECRET, {}, (err, userData) => {
+        if (err) throw err;
+        res.json(userData);
+    })
+  }
+  else {
+    res.status(401).json('no token');
+  }
 });
 
 app.post("/register", async (req, res) => {
@@ -33,7 +49,7 @@ app.post("/register", async (req, res) => {
       (err, token) => {
         if (err) throw err;
         res.cookie("token", token).status(201).json({
-            _id: createdUser._id,
+            id: createdUser._id,
             username: createdUser.username,
             email: createdUser.email,
             createdAt: createdUser.createdAt,

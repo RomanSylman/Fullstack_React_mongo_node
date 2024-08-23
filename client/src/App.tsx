@@ -1,16 +1,19 @@
-import axios from 'axios'
-import './App.css'
-import Registration from './components/Registration/Registration'
+import axios from "axios";
+import "./App.css";
+import { UserContextProvider } from "./UserContext";
+import Routes from "./Routes";
 
 function App() {
-  axios.defaults.baseURL = 'http://localhost:3030';
-  axios.defaults.withCredentials = true
+  axios.defaults.baseURL = "http://localhost:3030";
+  axios.defaults.withCredentials = true;
 
   return (
     <>
-      <Registration />
+      <UserContextProvider>
+        <Routes/>
+      </UserContextProvider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
