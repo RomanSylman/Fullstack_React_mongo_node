@@ -10,7 +10,7 @@ function App() {
   return (
     <>
       <UserContextProvider>
-        <Routes/>
+        <Routes />
       </UserContextProvider>
     </>
   );
