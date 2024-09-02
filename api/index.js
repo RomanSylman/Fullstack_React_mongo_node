@@ -5,11 +5,13 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
+const bcrypt = require("bcryptjs");
 
 dotenv.config();
-mongoose.connect(process.env.MONGO_URL)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch((err) => console.error('Error connecting to MongoDB:', err));
+mongoose
+.connect(process.env.MONGO_URL)
+.then(() => console.log("Connected to MongoDB"))
+.catch((err) => console.error("Error connecting to MongoDB:", err));
 const app = express();
 app.use(express.json());
 app.use(
@@ -19,22 +21,22 @@ app.use(
   })
 );
 
+const bcryptSalt = bcrypt.genSaltSync(10);
 app.use(cookieParser());
 
 app.get("/test", (req, res) => {
   res.json("Hello World!");
 });
 
-app.get('/profile', (req, res) => {
+app.get("/profile", (req, res) => {
   const token = req.cookies?.token;
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, {}, (err, userData) => {
-        if (err) throw err;
-        res.json(userData);
-    })
-  }
-  else {
-    res.status(401).json('no token');
+      if (err) throw err;
+      res.json(userData);
+    });
+  } else {
+    res.status(401).json("no token");
   }
 });
 
@@ -50,12 +52,15 @@ app.post("/login", async (req, res) => {
         {},
         (err, token) => {
           if (err) throw err;
-          res.cookie("token", token, {sameSite: "none", secure: true}).status(200).json({
+          res
+            .cookie("token", token, { sameSite: "none", secure: true })
+            .status(200)
+            .json({
               id: user._id,
               username: user.username,
               email: user.email,
               createdAt: user.createdAt,
-          });
+            });
         }
       );
     } else {
@@ -69,19 +74,27 @@ app.post("/login", async (req, res) => {
 app.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
   try {
-    const createdUser = await User.create({ username, email, password });
+    const hashedPassword = await bcrypt.hashSync(password, bcryptSalt);
+    const createdUser = await User.create({
+      username: username,
+      email: email,
+      password: hashedPassword,
+    });
     jwt.sign(
       { userId: createdUser._id },
       process.env.JWT_SECRET,
       {},
       (err, token) => {
         if (err) throw err;
-        res.cookie("token", token, {sameSite: "none", secure: true}).status(201).json({
+        res
+          .cookie("token", token, { sameSite: "none", secure: true })
+          .status(201)
+          .json({
             id: createdUser._id,
             username: createdUser.username,
             email: createdUser.email,
             createdAt: createdUser.createdAt,
-        });
+          });
       }
     );
   } catch (error) {
