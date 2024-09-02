@@ -38,6 +38,34 @@ app.get('/profile', (req, res) => {
   }
 });
 
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
+  if (user) {
+    const isPasswordCorrect = user.password === password;
+    if (isPasswordCorrect) {
+      jwt.sign(
+        { userId: user._id },
+        process.env.JWT_SECRET,
+        {},
+        (err, token) => {
+          if (err) throw err;
+          res.cookie("token", token, {sameSite: "none", secure: true}).status(200).json({
+              id: user._id,
+              username: user.username,
+              email: user.email,
+              createdAt: user.createdAt,
+          });
+        }
+      );
+    } else {
+      res.status(400).json("Wrong password");
+    }
+  } else {
+    res.status(404).json("User not found");
+  }
+});
+
 app.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
   try {
@@ -48,7 +76,7 @@ app.post("/register", async (req, res) => {
       {},
       (err, token) => {
         if (err) throw err;
-        res.cookie("token", token).status(201).json({
+        res.cookie("token", token, {sameSite: "none", secure: true}).status(201).json({
             id: createdUser._id,
             username: createdUser.username,
             email: createdUser.email,

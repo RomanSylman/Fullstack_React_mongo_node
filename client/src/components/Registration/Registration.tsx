@@ -3,15 +3,17 @@ import "./Registration.css";
 import axios from "axios";
 import { UserContext } from "../../UserContext";
 
-function Registration() {
+function RegistrationAndLogin() {
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [isLoginRegister, setIsLoginRegister] = useState("register");
   const { setUsername: setLoggedInUsername, setId } = useContext(UserContext);
 
-  async function register(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const { data } = await axios.post("/register", {
+    const url = isLoginRegister === "register" ? "/register" : "/login";
+    const { data } = await axios.post(url, {
       username,
       email,
       password,
@@ -22,7 +24,7 @@ function Registration() {
 
   return (
     <>
-      <form className="form" onSubmit={register}>
+      <form className="form" onSubmit={ handleSubmit }>
         <input
           value={username}
           onChange={(e) => setUsername(e.target.value)}
@@ -30,13 +32,15 @@ function Registration() {
           placeholder="username"
           className="form__input"
         />
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          type="email"
-          placeholder="your@mail"
-          className="form__input"
-        />
+        {isLoginRegister === "register" && (
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            type="email"
+            placeholder="email"
+            className="form__input"
+          />
+        )}
         <input
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -44,10 +48,27 @@ function Registration() {
           placeholder="password"
           className="form__input"
         />
-        <button className="form__button">Register</button>
+        <button className="form__button">
+          {isLoginRegister === "register" ? "Register" : "Login"}
+        </button>
+        <p>
+          {isLoginRegister === "register"
+            ? "Already have an account?"
+            : "Don't have an account?"}
+          <button
+            onClick={() =>
+              setIsLoginRegister(
+                isLoginRegister === "register" ? "login" : "register"
+              )
+            }
+            style={{ marginLeft: "5px" }}
+          >
+            {isLoginRegister === "register" ? "Login" : "Register"}
+          </button>
+        </p>
       </form>
     </>
   );
 }
 
-export default Registration;
+export default RegistrationAndLogin;
