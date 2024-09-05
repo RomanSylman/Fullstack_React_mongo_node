@@ -1,0 +1,51 @@
+@import url('../../styles/variables.css');
+
+.chat_container {
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  height: 100vh;
+}
+
+.chat_asside {
+  background-color: var(--soft-peach);
+}
+
+.chat_main {
+  background-color: var(--light-beige);
+  display: grid;
+  grid-template-rows: 9fr auto;
+  padding: 2rem;
+}
+
+.chat_text {
+    margin: 0;
+}
+
+.chat_input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--moss-green);
+    border-radius: 0.4rem;
+    background-color: var(--snow-biege);
+}
+
+
+/* chat input text */
+.chat_input_text {
+    width: 100%;
+    border: none;
+    margin-right: 1rem; 
+    resize: none;
+    padding: 0.5rem;
+    overflow-y: auto;
+    max-height: 8rem;
+    height: auto;
+}
+
+.chat_input_text:focus {
+    outline: none;
+}
+
+

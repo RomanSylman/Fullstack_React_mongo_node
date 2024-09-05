@@ -9,9 +9,9 @@ const bcrypt = require("bcryptjs");
 
 dotenv.config();
 mongoose
-.connect(process.env.MONGO_URL)
-.then(() => console.log("Connected to MongoDB"))
-.catch((err) => console.error("Error connecting to MongoDB:", err));
+  .connect(process.env.MONGO_URL)
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("Error connecting to MongoDB:", err));
 const app = express();
 app.use(express.json());
 app.use(
@@ -44,30 +44,22 @@ app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
   if (user) {
-    const isPasswordCorrect = user.password === password;
-    if (isPasswordCorrect) {
-      jwt.sign(
-        { userId: user._id },
-        process.env.JWT_SECRET,
-        {},
-        (err, token) => {
-          if (err) throw err;
-          res
-            .cookie("token", token, { sameSite: "none", secure: true })
-            .status(200)
-            .json({
-              id: user._id,
-              username: user.username,
-              email: user.email,
-              createdAt: user.createdAt,
-            });
-        }
-      );
+    const passed = bcrypt.compareSync(password, user.password);
+    if (passed) {
+      jwt.sign( { userId: user._id }, process.env.JWT_SECRET, {}, (err, token) => {
+        if (err) throw err;
+        res
+          .cookie("token", token, { sameSite: "none", secure: true })
+          .status(200)
+          .json({
+            id: user._id,
+            username: user.username,
+            createdAt: user.createdAt,
+          });
+      });
     } else {
-      res.status(400).json("Wrong password");
-    }
-  } else {
-    res.status(404).json("User not found");
+        res.status(400).json("Wrong credentials");
+      }
   }
 });
 

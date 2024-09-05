@@ -1,5 +1,4 @@
 import axios from "axios";
-import "./App.css";
 import { UserContextProvider } from "./UserContext";
 import Routes from "./Routes";
 
