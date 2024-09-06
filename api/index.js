@@ -95,9 +95,10 @@ app.post("/register", async (req, res) => {
   }
 });
 
-const server =app.listen(3030, () => console.log("Server started on port 3030"));
+const server = app.listen(3030, () => console.log("Server started on port 3030"));
 
 const wss = new ws.WebSocketServer({ server });
 wss.on ("connection", (connection) => {
   console.log("New client connected");
+  connection.send("Welcome to the server!");
 })
