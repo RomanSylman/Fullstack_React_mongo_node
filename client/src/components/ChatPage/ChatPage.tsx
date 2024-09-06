@@ -1,7 +1,11 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import "./ChatPage.css";
 
 function ChatPage() {
+  useEffect(() => {
+    new WebSocket("ws://localhost:5173");
+  }, [])
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const handleInput = () => {
     const textarea = textareaRef.current;

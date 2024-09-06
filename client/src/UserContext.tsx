@@ -16,16 +16,20 @@ export const UserContext = createContext<UserContextType>({
 });
 
 export function UserContextProvider({ children }: any) {
-  const [username, setUsername] = useState("");
-  const [id, setId] = useState("");
+  const [username, setUsername] = useState(localStorage.getItem("username") || "");
+  const [id, setId] = useState(localStorage.getItem("id") || "");
   useEffect(() => {
-    axios.get("/profile").then(response => {
-      setUsername(response.data.username);
-      setId(response.data.id);
-      console.log(response.data);
-      
-    })
-  }, [])
+    if (!username || !id) {
+      axios.get("/profile").then(response => {
+        setUsername(response.data.username);
+        setId(response.data.id);
+        localStorage.setItem("username", response.data.username);
+        localStorage.setItem("id", response.data.id);
+      }).catch(() => {
+        
+      });
+    }
+  }, [username, id]);
 
   return (
     <UserContext.Provider value={{ username, setUsername, id, setId }}>

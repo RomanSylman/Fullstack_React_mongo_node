@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const bcrypt = require("bcryptjs");
+const ws = require("ws");
 
 dotenv.config();
 mongoose
@@ -94,4 +95,9 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.listen(3030, () => console.log("Server started on port 3030"));
+const server =app.listen(3030, () => console.log("Server started on port 3030"));
+
+const wss = new ws.WebSocketServer({ server });
+wss.on ("connection", (connection) => {
+  console.log("New client connected");
+})
