@@ -31,12 +31,54 @@
     background-color: var(--snow-biege);
 }
 
+.chat_input:focus-within {
+    box-shadow: 0 0 0.5rem var(--moss-green);
+}
+
+
+/* chat input button */
+.chat_input_button {
+    transition: all 0.3s ease;
+    width: 2.4rem;
+    height: 2.4rem;
+    background-color: var(--snow-biege);
+    border: 2px solid var(--moss-green);
+    border-radius: 50%;
+    padding: 0.5rem;
+    margin: 0 1rem 5rem 1rem;
+    cursor: pointer;
+}
+
+.chat_input_button:hover {
+    background-color: var(--moss-green-hover);
+    border-color: var(--moss-green-hover);
+    box-shadow: 0 0 0.5rem var(--moss-green-hover);
+}
+
+.chat_input_button_icon {
+    position: relative;
+    bottom: 0.12rem;
+    right: 0.15rem;
+    stroke: var(--moss-green);
+    stroke-width: 1.7;
+    transition: all 0.3s ease;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: 0 auto;
+
+}
+
+.chat_input_button_icon:hover {
+    stroke: var(--snow-biege);
+}
+
 
 /* chat input text */
 .chat_input_text {
     width: 100%;
     border: none;
-    margin-right: 1rem; 
+    margin: 0.5rem 1rem 0.5rem 0.5rem;
+    border-radius: 0.4rem;
     resize: none;
     padding: 0.5rem;
     overflow-y: auto;
@@ -47,5 +89,7 @@
 .chat_input_text:focus {
     outline: none;
 }
+
+
 
 
