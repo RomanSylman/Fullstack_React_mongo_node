@@ -120,7 +120,8 @@ app.get('*', (req, res) => {
 });
 
 
-const server = app.listen(3030, () => console.log("Server started on port 3030"));
+const PORT = process.env.PORT || 3030;
+const server = app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 
 const wss = new ws.WebSocketServer({server});
 wss.on('connection', (connection, req) => {
