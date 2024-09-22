@@ -113,6 +113,12 @@ app.post('/register', async (req,res) => {
   }
 });
 
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'client/build')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+});
+
 
 const server = app.listen(3030, () => console.log("Server started on port 3030"));
 
